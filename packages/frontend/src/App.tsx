@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePeerDropStore } from './store/usePeerDropStore';
 import { useWebRTC } from './hooks/useWebRTC';
+import { FileDrop } from './components/FileDrop';
 
 function App() {
   const { roomCode, connectionState, isConnected } = usePeerDropStore();
@@ -105,18 +106,24 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-700 rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Room Code
-              </h2>
-              <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 mb-4">
-                <div className="text-3xl font-mono font-bold text-center text-gray-900 dark:text-white tracking-wider">
-                  {roomCode}
+            <div className="space-y-6">
+              <div className="bg-white dark:bg-gray-700 rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Room Code
+                </h2>
+                <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 mb-4">
+                  <div className="text-3xl font-mono font-bold text-center text-gray-900 dark:text-white tracking-wider">
+                    {roomCode}
+                  </div>
                 </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                  Share this code with your peer
+                </p>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                Share this code with your peer
-              </p>
+
+              {isConnected && (
+                <FileDrop className="w-full" />
+              )}
             </div>
           )}
         </main>

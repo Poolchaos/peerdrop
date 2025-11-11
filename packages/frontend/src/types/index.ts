@@ -4,17 +4,17 @@ export interface PeerDropState {
   peerId: string | null;
   isConnected: boolean;
   connectionState: RTCPeerConnectionState | 'disconnected';
-  
+
   // Transfer state
   transferState: 'idle' | 'sending' | 'receiving' | 'complete' | 'error';
   currentFile: FileMetadata | null;
   transferProgress: number;
   transferSpeed: number;
-  
+
   // WebRTC
   peerConnection: RTCPeerConnection | null;
   dataChannel: RTCDataChannel | null;
-  
+
   // Actions
   setRoomCode: (code: string | null) => void;
   setPeerId: (id: string | null) => void;

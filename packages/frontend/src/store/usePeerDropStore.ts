@@ -18,26 +18,26 @@ export const usePeerDropStore = create<PeerDropState>((set) => ({
   ...initialState,
 
   setRoomCode: (code) => set({ roomCode: code }),
-  
+
   setPeerId: (id) => set({ peerId: id }),
-  
-  setConnectionState: (state) => 
-    set({ 
+
+  setConnectionState: (state) =>
+    set({
       connectionState: state,
       isConnected: state === 'connected',
     }),
-  
+
   setTransferState: (state) => set({ transferState: state }),
-  
+
   setTransferProgress: (progress) => set({ transferProgress: progress }),
-  
+
   setTransferSpeed: (speed) => set({ transferSpeed: speed }),
-  
+
   setCurrentFile: (file) => set({ currentFile: file }),
-  
+
   setPeerConnection: (pc) => set({ peerConnection: pc }),
-  
+
   setDataChannel: (dc) => set({ dataChannel: dc }),
-  
+
   reset: () => set(initialState),
 }));

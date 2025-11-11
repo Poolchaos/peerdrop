@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { usePeerDropStore } from '../store/usePeerDropStore';
 import { signalingClient } from '../services/SignalingClient';
+import { useFileTransfer } from './useFileTransfer';
 import type { SignalingMessage } from '../types';
 
 const STUN_SERVERS = [
@@ -20,6 +21,7 @@ export function useWebRTC() {
     setRoomCode,
   } = usePeerDropStore();
 
+  const { handleMessage: handleFileTransferMessage } = useFileTransfer();
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const remotePeerIdRef = useRef<string | null>(null);
 
@@ -69,7 +71,7 @@ export function useWebRTC() {
     // Connection state monitoring
     pc.onconnectionstatechange = () => {
       setConnectionState(pc.connectionState);
-      
+
       if (pc.connectionState === 'failed') {
         cleanup();
       }
@@ -98,6 +100,10 @@ export function useWebRTC() {
 
     dc.onerror = (error) => {
       console.error('Data channel error:', error);
+    };
+
+    dc.onmessage = (event) => {
+      handleFileTransferMessage(event);
     };
   };
 
