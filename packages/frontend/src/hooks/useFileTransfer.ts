@@ -1,8 +1,8 @@
 import { usePeerDropStore } from '../store/usePeerDropStore';
-import type { 
-  FileTransferMessage, 
-  FileOffer, 
-  FileAccept, 
+import type {
+  FileTransferMessage,
+  FileOffer,
+  FileAccept,
   FileReject,
   ChunkMessage,
   ChunkAck,
@@ -27,7 +27,7 @@ export function useFileTransfer() {
   const pendingChunks = new Map<number, { timeout: number; retries: number }>();
   const sentChunks = new Set<number>();
   const receivedAcks = new Set<number>();
-  
+
   // File receiving state
   const receivingFiles = new Map<string, {
     metadata: FileOffer;
@@ -66,7 +66,7 @@ export function useFileTransfer() {
 
     const fileHash = await calculateFileHash(file);
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-    
+
     const offer: FileOffer = {
       fileId: crypto.randomUUID(),
       name: file.name,
@@ -151,9 +151,9 @@ export function useFileTransfer() {
       const timeout = window.setTimeout(() => {
         handleChunkTimeout(fileId, chunkIndex);
       }, CHUNK_TIMEOUT);
-      
+
       pendingChunks.set(chunkIndex, { timeout, retries: pending.retries });
-      
+
       // Resend chunk logic would go here
       console.warn(`Retrying chunk ${chunkIndex} (attempt ${pending.retries + 1})`);
     } else {
@@ -173,7 +173,7 @@ export function useFileTransfer() {
   const handleMessage = (event: MessageEvent) => {
     try {
       const message: FileTransferMessage = JSON.parse(event.data);
-      
+
       switch (message.type) {
         case 'file-offer':
           handleFileOffer(message.payload as FileOffer);
@@ -301,7 +301,7 @@ export function useFileTransfer() {
 
     const totalSize = sortedChunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
     const fileBuffer = new Uint8Array(totalSize);
-    
+
     let offset = 0;
     for (const chunk of sortedChunks) {
       fileBuffer.set(new Uint8Array(chunk), offset);
@@ -310,17 +310,17 @@ export function useFileTransfer() {
 
     // Verify file hash
     const fileHash = await calculateFileHash(new File([fileBuffer], receiving.metadata.name));
-    
+
     if (fileHash === receiving.metadata.hash) {
       // Create download link
       const blob = new Blob([fileBuffer], { type: receiving.metadata.type });
       const url = URL.createObjectURL(blob);
-      
+
       const a = document.createElement('a');
       a.href = url;
       a.download = receiving.metadata.name;
       a.click();
-      
+
       URL.revokeObjectURL(url);
 
       sendMessage({
